@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Free online JWT decoder tool. Instantly decode JSON Web Tokens to view headers, payloads, and signatures. No data leaves your browser.">
+    <meta name="keywords" content="jwt decoder, jwt debugger, token decoder, json web token, jwt validator, online jwt tool">
+    <meta name="author" content="YourName">
+    <meta property="og:title" content="JWT Inspector Pro | Online Decoding Tool">
+    <meta property="og:description" content="Decode and analyze JSON Web Tokens instantly. Perfect for developers and security professionals.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://yourdomain.com">
+    <meta name="theme-color" content="#4361ee">
+    <link rel="canonical" href="https://yourdomain.com">
+    <title>JWT Inspector Pro | Decode & Analyze JSON Web Tokens Online</title>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono&display=swap" rel="stylesheet">
+    
+    <!-- Favicon -->
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "JWT Inspector Pro",
+      "description": "Online tool to decode and analyze JSON Web Tokens",
+      "url": "https://yourdomain.com",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Any"
+    }
+    </script>
+    
+    <style>
+        :root {
+            --primary: #4361ee;
+            --dark: #1a1a2e;
+            --light: #f8f9fa;
+            --danger: #ef233c;
+            --success: #4cc9f0;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f5f7ff;
+            color: var(--dark);
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+        
+        header {
+            background: var(--primary);
+            color: white;
+            padding: 1.5rem;
+            text-align: center;
+        }
+        
+        h1 {
+            font-weight: 600;
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .subtitle {
+            opacity: 0.9;
+            font-weight: 400;
+        }
+        
+        .tool-area {
+            padding: 1.5rem;
+        }
+        
+        .ad-container {
+            margin: 1.5rem 0;
+            text-align: center;
+            min-height: 90px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #f8f9fa;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .input-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--dark);
+        }
+        
+        textarea {
+            width: 100%;
+            min-height: 120px;
+            padding: 1rem;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            resize: vertical;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            transition: border 0.2s;
+        }
+        
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(67, 97, 238, 0.2);
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+        
+        button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        button:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+        
+        button.secondary {
+            background-color: #6c757d;
+        }
+        
+        button.danger {
+            background-color: var(--danger);
+        }
+        
+        .result {
+            margin-top: 1.5rem;
+            border-top: 1px solid #eee;
+            padding-top: 1.5rem;
+        }
+        
+        .result-section {
+            margin-bottom: 1.5rem;
+        }
+        
+        .result-title {
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        pre {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .signature {
+            word-break: break-all;
+        }
+        
+        .validity-badge {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            margin-left: 0.5rem;
+        }
+        
+        .valid {
+            background: #e6f7ee;
+            color: #00a854;
+        }
+        
+        .invalid {
+            background: #fff1f0;
+            color: #f5222d;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 2rem;
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+            
+            h1 {
+                font-size: 1.5rem;
+            }
+            
+            .button-group {
+                flex-direction: column;
+            }
+            
+            button {
+                width: 100%;
+            }
+        }
+    </style>
+    
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-YOUR_ADSENSE_ID" crossorigin="anonymous"></script>
+    <script>
+        (adsbygoogle = window.adsbygoogle || []).push({
+            google_ad_client: "ca-pub-YOUR_ADSENSE_ID",
+            enable_page_level_ads: true
+        });
+    </script>
+    
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-YOUR_GA_ID"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-YOUR_GA_ID');
+    </script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>JWT Inspector Pro</h1>
+            <p class="subtitle">Decode and analyze JSON Web Tokens instantly</p>
+        </header>
+        
+        <div class="tool-area">
+            <!-- Top Ad Banner -->
+            <div class="ad-container">
+                <ins class="adsbygoogle"
+                    style="display:block"
+                    data-ad-client="ca-pub-YOUR_ADSENSE_ID"
+                    data-ad-slot="YOUR_AD_SLOT_1"
+                    data-ad-format="auto"
+                    data-full-width-responsive="true"></ins>
+                <script>
+                    (adsbygoogle = window.adsbygoogle || []).push({});
+                </script>
+            </div>
+            
+            <div class="input-group">
+                <label for="jwt-input">
+                    Paste your JWT token:
+                    <span style="font-weight:400;color:#6c757d">(e.g., eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...)</span>
+                </label>
+                <textarea id="jwt-input" placeholder="Enter JWT token here..."></textarea>
+            </div>
+            
+            <div class="button-group">
+                <button id="decode-btn">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                    </svg>
+                    Decode Token
+                </button>
+                <button id="clear-btn" class="secondary">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                    </svg>
+                    Clear
+                </button>
+                <button id="sample-btn" class="secondary">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                        <polyline points="14 2 14 8 20 8"></polyline>
+                    </svg>
+                    Load Sample
+                </button>
+            </div>
+            
+            <!-- Middle Ad Banner -->
+            <div class="ad-container">
+                <ins class="adsbygoogle"
+                    style="display:block"
+                    data-ad-client="ca-pub-YOUR_ADSENSE_ID"
+                    data-ad-slot="YOUR_AD_SLOT_2"
+                    data-ad-format="auto"
+                    data-full-width-responsive="true"></ins>
+                <script>
+                    (adsbygoogle = window.adsbygoogle || []).push({});
+                </script>
+            </div>
+            
+            <div class="result" id="result-area" style="display:none">
+                <div class="result-section">
+                    <h3 class="result-title">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                            <polyline points="14 2 14 8 20 8"></polyline>
+                        </svg>
+                        Header
+                        <span class="validity-badge valid" id="header-validity">VALID</span>
+                    </h3>
+                    <pre id="header-output"></pre>
+                </div>
+                
+                <div class="result-section">
+                    <h3 class="result-title">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="8" x2="12" y2="12"></line>
+                            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                        </svg>
+                        Payload
+                    </h3>
+                    <pre id="payload-output"></pre>
+                </div>
+                
+                <div class="result-section">
+                    <h3 class="result-title">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                        </svg>
+                        Signature
+                    </h3>
+                    <pre class="signature" id="signature-output"></pre>
+                </div>
+            </div>
+            
+            <!-- Bottom Ad Banner -->
+            <div class="ad-container">
+                <ins class="adsbygoogle"
+                    style="display:block"
+                    data-ad-client="ca-pub-YOUR_ADSENSE_ID"
+                    data-ad-slot="YOUR_AD_SLOT_3"
+                    data-ad-format="auto"
+                    data-full-width-responsive="true"></ins>
+                <script>
+                    (adsbygoogle = window.adsbygoogle || []).push({});
+                </script>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <p>JWT Inspector Pro | All processing happens in your browser | No data is sent to servers</p>
+        <p><a href="/privacy">Privacy Policy</a> | <a href="/terms">Terms of Service</a></p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const jwtInput = document.getElementById('jwt-input');
+            const decodeBtn = document.getElementById('decode-btn');
+            const clearBtn = document.getElementById('clear-btn');
+            const sampleBtn = document.getElementById('sample-btn');
+            const resultArea = document.getElementById('result-area');
+            const headerOutput = document.getElementById('header-output');
+            const payloadOutput = document.getElementById('payload-output');
+            const signatureOutput = document.getElementById('signature-output');
+            const headerValidity = document.getElementById('header-validity');
+            
+            // Decode JWT
+            function decodeJWT(token) {
+                try {
+                    const [header, payload, signature] = token.split('.');
+                    
+                    // Base64 URL decode
+                    const decodeBase64Url = (str) => {
+                        str = str.replace(/-/g, '+').replace(/_/g, '/');
+                        const pad = str.length % 4;
+                        if (pad) str += new Array(5-pad).join('=');
+                        return JSON.parse(atob(str));
+                    };
+                    
+                    return {
+                        header: decodeBase64Url(header),
+                        payload: decodeBase64Url(payload),
+                        signature: signature
+                    };
+                } catch (e) {
+                    return { error: "Invalid JWT format" };
+                }
+            }
+            
+            // Display results
+            function showResults(decoded) {
+                headerOutput.textContent = JSON.stringify(decoded.header, null, 2);
+                payloadOutput.textContent = JSON.stringify(decoded.payload, null, 2);
+                signatureOutput.textContent = decoded.signature;
+                
+                // Simple validation (client-side only checks)
+                const algValid = decoded.header.alg && decoded.header.alg !== 'none';
+                headerValidity.textContent = algValid ? 'VALID' : 'INSECURE';
+                headerValidity.className = algValid ? 'validity-badge valid' : 'validity-badge invalid';
+                
+                resultArea.style.display = 'block';
+                
+                // Track successful decode event
+                gtag('event', 'decode', {
+                    'event_category': 'engagement',
+                    'event_label': 'Successful JWT decode'
+                });
+            }
+            
+            // Event listeners
+            decodeBtn.addEventListener('click', () => {
+                const token = jwtInput.value.trim();
+                if (!token) return;
+                
+                const decoded = decodeJWT(token);
+                if (decoded.error) {
+                    alert(decoded.error);
+                    return;
+                }
+                
+                showResults(decoded);
+            });
+            
+            clearBtn.addEventListener('click', () => {
+                jwtInput.value = '';
+                resultArea.style.display = 'none';
+            });
+            
+            sampleBtn.addEventListener('click', () => {
+                jwtInput.value = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyLCJleHAiOjE2OTYxNjcyMDAsImFkbWluIjp0cnVlfQ.4A-6XW-7VQ3Y9wzUvBnY3Q7W1r7D1kL1E5xY6vF3Z4M';
+                const decoded = decodeJWT(jwtInput.value);
+                showResults(decoded);
+            });
+            
+            // Real-time decoding on paste
+            jwtInput.addEventListener('paste', (e) => {
+                setTimeout(() => {
+                    const token = jwtInput.value.trim();
+                    if (token.split('.').length === 3) {
+                        const decoded = decodeJWT(token);
+                        if (!decoded.error) showResults(decoded);
+                    }
+                }, 10);
+            });
+            
+            // Load ads after content
+            setTimeout(() => {
+                const ads = document.querySelectorAll('.adsbygoogle');
+                ads.forEach(ad => {
+                    (adsbygoogle = window.adsbygoogle || []).push({});
+                });
+            }, 1000);
+        });
+    </script>
+</body>
+</html>
